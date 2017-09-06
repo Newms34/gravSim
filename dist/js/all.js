@@ -91,6 +91,13 @@ var app = angular
                     $scope.canv.fillStyle = 'rgba(0,0,0,0.1)';
                     $scope.canv.fillRect(0, 0, $scope.w, $scope.h);
                 }
+                if($scope.plans.length<2 || ($scope.sunStatus && !$scope.plans.length)){
+                    $interval.cancel($scope.timer);
+                    bootbox.alert({
+                        title:'System Crashed!',
+                        message:'Your system has only one particle left!'
+                    })
+                }
             }, 50);
         };
         $scope.getGrav = function(s, d,isSun) {
