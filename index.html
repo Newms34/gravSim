@@ -3,7 +3,7 @@
 
 <head>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="./dist/css/styles.css">
 </head>
 
@@ -42,7 +42,7 @@
                 <div class='row'>
                     <div class='input-group col-md-10'>
                         <div class='input-group-addon alert-info'>
-                            <input type="checkbox" ng-model='useSun' ng-change='toggleSun()'/>
+                            <input type="checkbox" ng-model='useSun' ng-change='toggleSun()' />
                         </div>
                         <div class='form-control'>Include fixed 'sun'</div>
                         <div class='input-group-addon'>
@@ -54,7 +54,7 @@
                     <div class='row'>
                         <div class='input-group col-md-10'>
                             <div class='input-group-addon alert-info'>Mass of Sun</div>
-                            <input type="number" class='form-control' ng-model='mSun'/>
+                            <input type="number" class='form-control' ng-model='mSun' />
                         </div>
                     </div>
                 </div>
@@ -79,13 +79,12 @@
     <div class='plan' id='pl{{$index}}' ng-repeat='p in plans' style='left:{{Math.floor(p.x)}}px;top:{{Math.floor(p.y)}}px;{{getStyles(p.m)}}' title='{{$index}}: {{p}}'>
     </div>
     <div class='plan' id='sun' ng-if='sunStatus' style='left:{{Math.floor(sun.x)}}px;top:{{Math.floor(sun.y)}}px;{{getStyles(sun.m,true)}}'>
-    	
     </div>
     <canvas id='canv' style='height:{{h}}px;width:{{w}}px;' width='{{w}}' height='{{h}}px'></canvas>
-    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="./node_modules/bootbox/bootbox.min.js"></script>
-    <script src="./node_modules/angular/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
     <script src="./dist/js/all.min.js"></script>
 </body>
 
