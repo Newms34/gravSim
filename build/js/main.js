@@ -56,27 +56,27 @@ var app = angular
                             continue;
                         }
                         // do we need to deal with cases where the planets have the same x and/or y coords?
+                        if (!$scope.plans[i] || !$scope.plans[j]) {
+                            console.log('comparing', $scope.plans[i], 'and', $scope.plans[j])
+                        }
                         var grav = $scope.getGrav($scope.plans[i], $scope.plans[j]);
                         if (grav && grav != false && grav != 'false') {
                             //objects NOT merged, so we can just continue;
-                            // $scope.plans[j];
                         } else {
                             stopped = true;
                             console.log('Objects', $scope.plans[i], 'and', $scope.plans[j], 'merged!');
                             $scope.plans[i] = $scope.combine($scope.plans[i], $scope.plans[j]);
-                            // $scope.plans[i].isCol = 'col w' + j;
-                            // $scope.plans[j].isCol = 'col w' + i;
-                            // $scope.hidePlans = true;
-                            $scope.plans.splice(j, 1); //splice out the target planet.
+                            $scope.plans.splice(j, 1);
                             break;
                         }
                     }
-                    if($scope.sunStatus){
+                    if ($scope.sunStatus) {
                         //sun active, so do that
-                        var grav = $scope.getGrav($scope.plans[i],$scope.sun,true);
-                        if(!grav || grav=='false'){
+                        var grav = $scope.getGrav($scope.plans[i], $scope.sun, true);
+                        if (!grav || grav == 'false') {
                             //collision with sun
-                            $scope.plans.splice(i,1);
+                            $scope.plans.splice(i, 1);
+                            stopped=true;
                         }
                     }
                     if ($scope.pathMode) {
@@ -85,22 +85,25 @@ var app = angular
                         var lineWid = Math.ceil($scope.plans[i].m / 8);
                         $scope.canv.fillRect($scope.plans[i].x + (0.05 * $scope.plans[i].m), $scope.plans[i].y + (0.05 * $scope.plans[i].m), lineWid, lineWid);
                     }
+                    if(stopped){
+                        break;
+                    }
                 }
                 if ($scope.ticks % 5 == 0) {
                     $scope.canv.globalCompositeOperation = "multiply";
                     $scope.canv.fillStyle = 'rgba(0,0,0,0.1)';
                     $scope.canv.fillRect(0, 0, $scope.w, $scope.h);
                 }
-                if($scope.plans.length<2 || ($scope.sunStatus && !$scope.plans.length)){
+                if ($scope.plans.length < 2 || ($scope.sunStatus && !$scope.plans.length)) {
                     $interval.cancel($scope.timer);
                     bootbox.alert({
-                        title:'System Crashed!',
-                        message:'Your system has only one particle left!'
+                        title: 'System Crashed!',
+                        message: 'Your system has only one particle left!'
                     })
                 }
             }, 50);
         };
-        $scope.getGrav = function(s, d,isSun) {
+        $scope.getGrav = function(s, d, isSun) {
             //distance (r) btwn objects
             //returns false if objects are too close (colided)
 
@@ -114,10 +117,12 @@ var app = angular
             //     d = angular.copy(d);
             //     d.y += .01;
             // }
-            var halfS = 10 * s.m / $scope.maxSize,
-                halfD = 10 * d.m / $scope.maxSize;
-            if(isSun){
-                halfD = sun.m/2;
+            var halfS = 10 * s.m / $scope.maxSize;
+
+            if (isSun) {
+                var halfD = $scope.sun.m / 2;
+            } else {
+                var halfD = 10 * d.m / $scope.maxSize;
             }
             var dist = Math.sqrt(
                 Math.pow(Math.abs((s.x) - (d.x)), 2) + Math.pow(Math.abs((s.y) - (d.y)), 2)
@@ -126,8 +131,6 @@ var app = angular
             if (dist < ((halfS) + (halfD))) {
                 console.log('COLLIDE! DIST IS:', dist, 'MIN RANGE IS', ((halfS) + (halfD)));
                 return false;
-            } else {
-                console.log('REG: DIST IS:', dist, 'MIN RANGE IS', ((halfS) + (halfD)));
             }
             //the scalar component of the gravity to be added.
             var gravDirect = $scope.g * d.m / Math.pow(dist, 2);
@@ -144,7 +147,7 @@ var app = angular
             } else {
                 angle = Math.PI + angle;
             }
-            angle=(2*Math.PI)-angle;
+            angle = (2 * Math.PI) - angle;
             //dirs
             s.dx -= gravDirect * Math.cos(angle);
             s.dy -= gravDirect * Math.sin(angle);
@@ -152,6 +155,32 @@ var app = angular
             s.dy = Math.min(20, s.dy);
             return s;
         };
+        $scope.noBubble = function(e) {
+            // e.preventDefault();
+            e.stopPropagation();
+        }
+        $scope.mouse={x:0,y:0}
+        $scope.mousey = function(e){
+            $scope.mouse.x = e.clientX;
+            $scope.mouse.y=e.clientY;
+        }
+        $scope.moving = false;
+        $scope.toggleMove = function(e) {
+            if ($scope.moving) {
+                //put down particle
+                $scope.moving.x = e.clientX;
+                $scope.moving.y = e.clientY;
+                console.log("re-adding",$scope.moving)
+                $scope.plans.push(angular.copy($scope.moving));
+                $scope.moving=false;
+            } else {
+                console.log(e.target.id.slice(2),e)
+                var id = e.target.id.slice(2);
+                console.log($scope.plans.length)
+                $scope.moving = $scope.plans.splice(id,1)[0];
+                console.log($scope.plans.length)
+            }
+        }
         $scope.combine = function(s, a) {
             //inelastic collision btwn planets.
             //s is the output (and Source obj). a is the addon (which is deleted!)

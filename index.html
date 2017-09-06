@@ -7,8 +7,8 @@
     <link rel="stylesheet" type="text/css" href="./dist/css/styles.css">
 </head>
 
-<body ng-app='gravapp' ng-controller='grav-cont' class='container'>
-    <div id='menu' class='container panel panel-primary col-md-3'>
+<body ng-app='gravapp' ng-controller='grav-cont' class='container' ng-click='toggleMove($event)' ng-mousemove='mousey($event)'>
+    <div id='menu' ng-click='noBubble($event)' class='container panel panel-primary col-md-3'>
         <div class='panel-heading'>Controls</div>
         <div class='panel-body'>
             <form novalidate>
@@ -78,14 +78,15 @@
     </div>
     <div class='plan' id='pl{{$index}}' ng-repeat='p in plans' style='left:{{Math.floor(p.x)}}px;top:{{Math.floor(p.y)}}px;{{getStyles(p.m)}}' title='{{$index}}: {{p}}'>
     </div>
-    <div class='plan' id='sun' ng-if='sunStatus' style='left:{{Math.floor(sun.x)}}px;top:{{Math.floor(sun.y)}}px;{{getStyles(sun.m,true)}}'>
+    <div class='plan' id='sun' ng-if='sunStatus' ng-click='noBubble($event)' style='left:{{Math.floor(sun.x)}}px;top:{{Math.floor(sun.y)}}px;{{getStyles(sun.m,true)}}'>
     </div>
+    <div ng-show='moving' class='plan' style='left:{{Math.floor(mouse.x)}}px;top:{{Math.floor(mouse.y)}}px;{{getStyles(moving.m)}}'></div>
     <canvas id='canv' style='height:{{h}}px;width:{{w}}px;' width='{{w}}' height='{{h}}px'></canvas>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-    <script src="./dist/js/all.min.js"></script>
+    <script src="./dist/js/all.js"></script>
 </body>
 
 </html>
