@@ -7,6 +7,7 @@ var app = angular
         $scope.ticks = 0;
         $scope.numPlans = 15;
         $scope.maxSize = 100;
+        $scope.maxSpd = 2;
         $scope.g = 0.1;
         $scope.timer = null;
         $scope.sunStatus = false;
@@ -76,7 +77,7 @@ var app = angular
                         if (!grav || grav == 'false') {
                             //collision with sun
                             $scope.plans.splice(i, 1);
-                            stopped=true;
+                            stopped = true;
                         }
                     }
                     if ($scope.pathMode) {
@@ -85,7 +86,7 @@ var app = angular
                         var lineWid = Math.ceil($scope.plans[i].m / 8);
                         $scope.canv.fillRect($scope.plans[i].x + (0.05 * $scope.plans[i].m), $scope.plans[i].y + (0.05 * $scope.plans[i].m), lineWid, lineWid);
                     }
-                    if(stopped){
+                    if (stopped) {
                         break;
                     }
                 }
@@ -159,10 +160,10 @@ var app = angular
             // e.preventDefault();
             e.stopPropagation();
         }
-        $scope.mouse={x:0,y:0}
-        $scope.mousey = function(e){
+        $scope.mouse = { x: 0, y: 0 }
+        $scope.mousey = function(e) {
             $scope.mouse.x = e.clientX;
-            $scope.mouse.y=e.clientY;
+            $scope.mouse.y = e.clientY;
         }
         $scope.moving = false;
         $scope.toggleMove = function(e) {
@@ -170,14 +171,14 @@ var app = angular
                 //put down particle
                 $scope.moving.x = e.clientX;
                 $scope.moving.y = e.clientY;
-                console.log("re-adding",$scope.moving)
+                console.log("re-adding", $scope.moving)
                 $scope.plans.push(angular.copy($scope.moving));
-                $scope.moving=false;
+                $scope.moving = false;
             } else {
-                console.log(e.target.id.slice(2),e)
+                console.log(e.target.id.slice(2), e)
                 var id = e.target.id.slice(2);
                 console.log($scope.plans.length)
-                $scope.moving = $scope.plans.splice(id,1)[0];
+                $scope.moving = $scope.plans.splice(id, 1)[0];
                 console.log($scope.plans.length)
             }
         }
@@ -209,8 +210,8 @@ var app = angular
         $scope.newPlan = function() {
             this.x = Math.floor(Math.random() * $scope.w);
             this.y = Math.floor(Math.random() * $scope.h);
-            this.dx = Math.random() - 0.5;
-            this.dy = Math.random() - 0.5;
+            this.dx = (Math.random()*$scope.maxSpd) - (0.5*$scope.maxSpd);
+            this.dy = (Math.random()*$scope.maxSpd) - (0.5*$scope.maxSpd);
             this.m = ($scope.maxSize * 0.1) + Math.floor(Math.random() * ($scope.maxSize - ($scope.maxSize * 0.1))); //random from 10 to 99
         };
         $scope.explSun = function() {
